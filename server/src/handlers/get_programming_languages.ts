@@ -1,7 +1,19 @@
+import { db } from '../db';
+import { programmingLanguagesTable } from '../db/schema';
 import { type ProgrammingLanguage } from '../schema';
+import { asc } from 'drizzle-orm';
 
-export async function getProgrammingLanguages(): Promise<ProgrammingLanguage[]> {
-  // This is a placeholder declaration! Real code should be implemented here.
-  // The goal of this handler is fetching all available programming languages from the database.
-  return Promise.resolve([]);
-}
+export const getProgrammingLanguages = async (): Promise<ProgrammingLanguage[]> => {
+  try {
+    // Fetch all programming languages, ordered alphabetically by name
+    const results = await db.select()
+      .from(programmingLanguagesTable)
+      .orderBy(asc(programmingLanguagesTable.name))
+      .execute();
+
+    return results;
+  } catch (error) {
+    console.error('Failed to fetch programming languages:', error);
+    throw error;
+  }
+};
